@@ -7,26 +7,38 @@ import {Container} from './styles';
 interface Props {
     items?: ListItem[];
     hasNavigation?: boolean;
-    isLoading: string;
+    isLoading: boolean;
 }
 
-const List = ({items, hasNavigation = true, isLoading}: Props) => {
+const List: React.FC<Props> = ({items, hasNavigation = true, isLoading}) => {
+    if (isLoading) {
+        return (
+            <Container>
+                <Spinner />
+            </Container>
+        );
+    }
+
+    if (!items?.length) {
+        return (
+            <Container>
+                <p>No items to display.</p>
+            </Container>
+        );
+    }
+
     return (
         <Container>
-            {isLoading && <Spinner />}
-            {!isLoading &&
-                items.map(({url, id, columns, navigationProps}, index) => {
-                    return (
-                        <Card
-                            key={`${id}-${index}`}
-                            id={id}
-                            columns={columns}
-                            navigationProps={navigationProps}
-                            hasNavigation={hasNavigation}
-                            url={url}
-                        />
-                    );
-                })}
+            {items.map(({url, id, columns, navigationProps}) => (
+                <Card
+                    key={id}
+                    id={id}
+                    columns={columns}
+                    navigationProps={navigationProps}
+                    hasNavigation={hasNavigation}
+                    url={url}
+                />
+            ))}
         </Container>
     );
 };

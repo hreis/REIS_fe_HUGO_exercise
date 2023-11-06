@@ -9,16 +9,27 @@ interface Props {
 
 const Header = ({title, showBackButton = true}: Props) => {
     const navigate = useNavigate();
+
+    const handleBack = () => {
+        if (window.history.length > 1) {
+            navigate(-1);
+        } else {
+            // scenario where there's no history
+            navigate('/home');
+        }
+    };
+
     return (
-        <HeaderContainer>
-            <NavigationHeader>
+        <HeaderContainer as="header">
+            <NavigationHeader as="nav">
                 {showBackButton && (
                     <BackButton
-                        onClick={() => {
-                            navigate(-1);
-                        }}
+                        onClick={handleBack}
+                        aria-label="Go back"
+                        role="button"
+                        tabIndex={0}
                     >
-                        🔙
+                        <span aria-hidden="true">🔙</span>
                     </BackButton>
                 )}
                 <Title>{title}</Title>
