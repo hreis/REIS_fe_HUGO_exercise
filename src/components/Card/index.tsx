@@ -14,33 +14,78 @@ interface Props {
     navigationProps?: UserData | Teams;
 }
 
-const Card = ({
+const Card: React.FC<Props> = ({
     id,
     columns,
-    url,
+    url = '#',
     hasNavigation = true,
-    navigationProps = null,
-}: Props): JSX.Element => {
+    navigationProps = {},
+}) => {
     const navigate = useNavigate();
+    const getInitials = (name = '') => {
+        return name
+            .split(' ')
+            .slice(0, 2)
+            .map((word) => word[0])
+            .join('')
+            .toUpperCase();
+    };
+
+    const avatarEntry = columns.find(({key}) => key === 'Avatar');
+    const [avatarUrl, setAvatarUrl] = React.useState(avatarEntry ? avatarEntry.value : '');
+    const displayNameEntry = columns.find(({key}) => key === 'Name');
+    const locationEntry = columns.find(({key}) => key === 'Location');
+    const teamLeadEntry = columns.find(({key}) => key === 'Team Lead');
+    const displayName = displayNameEntry ? displayNameEntry.value : '';
+    const initials = getInitials(displayName);
+   
+
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (hasNavigation && url) {
+            navigate(url, {
+                state: navigationProps,
+            });
+        }
+        e.preventDefault();
+    };
+
+    React.useEffect(() => {
+        const img = new Image();
+        img.onload = () => setAvatarUrl(avatarEntry.value);
+        img.onerror = () => setAvatarUrl('');
+        if (avatarEntry && avatarEntry.value) {
+            img.src = avatarEntry.value;
+        }
+    }, [avatarEntry]);
 
     return (
         <Container
             data-testid={`cardContainer-${id}`}
             hasNavigation={hasNavigation}
-            onClick={(e: Event) => {
-                if (hasNavigation) {
-                    navigate(url, {
-                        state: navigationProps,
-                    });
-                }
-                e.preventDefault();
-            }}
+            onClick={handleClick}
+            tabIndex={hasNavigation ? 0 : undefined}
+            role={hasNavigation ? 'button' : undefined}
         >
-            {columns.map(({key: columnKey, value}) => (
-                <p key={columnKey}>
-                    <strong>{columnKey}</strong>&nbsp;{value}
-                </p>
-            ))}
+            {avatarUrl ? (
+                <img src={avatarUrl} alt="Avatar" style={{width: '100px', height: '100px'}} />
+            ) : (
+                <div style={{
+                    width: '50px',
+                    height: '50px',
+                    backgroundColor: '#737373',
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px',
+                    borderRadius: '50%',
+                }}>
+                    {initials}
+                </div>
+            )}
+            {teamLeadEntry && <p>Team Lead</p>}
+            {displayNameEntry && <p>{displayNameEntry.value}</p>}
+            {locationEntry && <p>{locationEntry.key}: {locationEntry.value}</p>}
         </Container>
     );
 };

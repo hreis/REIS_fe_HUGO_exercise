@@ -1,25 +1,31 @@
-# Tempo Frontend challenge
+Tempo Frontend Challenge
+This repository contains the frontend code for the Tempo challenge, now featuring an advanced search functionality and improved folder architecture for better scalability and maintainability.
 
-# Solution Improvement
+Solution Improvement
+What's New:
 
-### Describe what you have improved in the solution
+Implemented an advanced search feature to quickly navigate through items.
+Restructured the folder architecture for clear separation of concerns and easier navigation of the codebase.
+Added utility functions to handle common tasks, reducing code redundancy and improving performance.
+Getting Started
+To run the project, follow these steps:
 
-## To Run the project you must run:
-
+Installation:
 ```
 npm install
 ```
 
-## after the installation finished, you can run:
+Starting the Application:
 
+After the installation is complete, start the application with:
 ```
 npm start
 ```
 
-#### The project will open in your browser with the following url http://localhost:3000;
+The project will open in your browser at http://localhost:3000.
 
-## To run the tests yo must run
-
+Testing
+To run the test suite and validate the changes:
 ```
 npm run test
 ```
